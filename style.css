@@ -33,6 +33,7 @@ main{
 }
 #welcome{
   min-height: calc(95vh - (120px + 80px));
+  font-family: 'Edu NSW ACT Foundation', cursive;
 }
 footer{
   height: 120px;
