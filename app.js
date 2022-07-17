@@ -1,7 +1,7 @@
 let kittens = []
-const moods = ['happy', 'tolerant', 'angry', 'gone']
-let baseMood = 'tolerant'
-let baseAffection = 41
+const baseMood = 'tolerant'
+const baseAffection = 41
+const maxAffection = 100 
 /* 0 = gone, 1-40 = angry, 41-80 = tolerant, 80-100 = happy
 /**
  * Called when submitting the new Kitten Form
@@ -12,20 +12,27 @@ let baseAffection = 41
  */
 function addKitten(event) {
   event.preventDefault()
-  let kittenName = event.target.name
+  let kittenName = event.target.name.value
+  let newKitten = {}
 
-  if(kittens.findIndex(kitten => kitten.name == kittenName) == -1) {
-    let kitten = {
+  if(kittens.length == 0) {
+    newKitten = {
       id: generateId(),
       name: kittenName,
       mood: baseMood,
       affection: baseAffection
     }
-  } else {
+    kittens.push(newKitten)
+  } else if(kittens.findIndex(kitten => kitten.name == kittenName) == -1) {
+      newKitten = {
+        id: generateId(),
+        name: kittenName,
+        mood: baseMood,
+        affection: baseAffection
+      }
+      kittens.push(newKitten)
+    } 
 
-  }
-
-  kittens.push(kitten)
   saveKittens()
   event.target.reset()
 }
@@ -36,6 +43,7 @@ function addKitten(event) {
  */
 function saveKittens() {
   window.localStorage.setItem('kittens', JSON.stringify(kittens))
+  drawKittens()
 }
 
 /**
@@ -49,23 +57,23 @@ function loadKittens() {
   if(localKittens) {
     kittens = localKittens
   }
-  drawKittens()
 }
 
 /**
  * Draw all of the kittens to the kittens element
+ * the kitten id is added to image class list
  */
 function drawKittens() {
   let template = ""
-  
 
-  for(let kitten of kittens) {`
-    <div class="card">
-      <img TODO:>
-      <div>${kitten.name}</div>
-      <div>${kitten.mood}</div>
-    </div>
-    `
+  for(let kitten of kittens) {
+    template += `
+      <div class="card">
+        <img TODO>
+        <div>${kitten.name}</div>
+        <div>${kitten.mood}</div>
+      </div>
+      `
   }
 }
 
@@ -80,7 +88,7 @@ function findKittenById(id) {
   if(index == -1) {
     throw new Error('Invalid Kitten ID')
   } else {
-    return index
+    return kittens[index]
   }
 }
 
@@ -94,10 +102,21 @@ function findKittenById(id) {
  * @param {string} id 
  */
 function pet(id) {
-  let randomNumber = Math.random()
-  if(randomNumber > .5) {
+  let importedKitten = findKittenById(id)
+  let randomNum = Math.random()
+  let affectionIncrease = Math.floor((Math.random() * 8) + 6)
 
+  if(randomNum > .5) {
+    if(importedKitten.affection + affectionIncrease > maxAffection) {
+      importedKitten.affection = 100
+    } else{
+      importedKitten.affection += affectionIncrease
+    }
+  } else {
+    importedKitten.affection -= 5
   }
+  setKittenMood(importedKitten)
+  saveKittens()
 }
 
 /**
@@ -107,6 +126,10 @@ function pet(id) {
  * @param {string} id
  */
 function catnip(id) {
+  let importedKitten = findKittenById(id)
+  importedKitten.affection = 50
+  setKittenMood(importedKitten)
+  saveKittens()
 }
 
 /**
@@ -114,6 +137,25 @@ function catnip(id) {
  * @param {Kitten} kitten 
  */
 function setKittenMood(kitten) {
+  let toggleClass = document.getElementsByClassName(JSON.stringify(kitten.id)).toggle(kitten.mood)
+  
+  if(kitten.affection == 0) {
+    toggleClass
+    kitten.mood = "gone"
+    toggleClass
+  } else if(kitten.affection < 41) {
+    toggleClass
+    kitten.mood = "angry"
+    toggleClass
+  } else if(kitten.affection < 81) {
+    toggleClass
+    kitten.mood = "tolerant"
+    toggleClass
+  } else {
+    toggleClass
+    kitten.mood = "happy"
+    toggleClass
+  }
 }
 
 /**
@@ -132,6 +174,7 @@ function clearKittens(){
 function getStarted() {
   document.getElementById("welcome").remove();
   console.log('Good Luck, Take it away')
+  drawKittens()
 }
 
 
