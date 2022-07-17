@@ -128,9 +128,11 @@ button.btn-special:hover{
   filter: drop-shadow(var(--shadow));
 }
 
+.card.kitten {
+  margin: 7px;
+}
 
 .kitten img{
-  filter: drop-shadow(2px 4px 6px #1b1b1b);
   transition: all .35s ease;
 }
 .kitten.happy img{
@@ -143,7 +145,7 @@ button.btn-special:hover{
   filter: drop-shadow(2px 4px 6px #ff0000) contrast(1);
 }
 .kitten.gone img{
-  filter: drop-shadow(2px 4px 6px #ff0000) contrast(0);
+  filter: drop-shadow(2px 4px 6px #646464);
 }
 .kitten.gone{
   color: var(--danger);

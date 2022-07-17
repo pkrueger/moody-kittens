@@ -27,9 +27,9 @@ The basic design and layout for this app has been mocked out and the names of th
 
 ## Requirements: 
 - [x] Users must have a form where they enter in at minimum the name of a kitten 
-- [ ] A Kitten's name and mood must be visible for the user 
+- [x] A Kitten's name and mood must be visible for the user 
 - [x] A custom Google Font must be added 
-- [ ] A Kitten's mood must affect visually the appearance of the kitten 
+- [x] A Kitten's mood must affect visually the appearance of the kitten 
 - [x] Add Kitten form clears when submitted 
 - [x] Add Kitten form submission does not reload the page 
 - [x] Kittens are stored in local storage 

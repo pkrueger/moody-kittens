@@ -2,6 +2,7 @@ let kittens = []
 const baseMood = 'tolerant'
 const baseAffection = 41
 const maxAffection = 100 
+const kittenColors = ["brown", "gray", "light"]
 /* 0 = gone, 1-40 = angry, 41-80 = tolerant, 80-100 = happy
 /**
  * Called when submitting the new Kitten Form
@@ -14,27 +15,31 @@ function addKitten(event) {
   event.preventDefault()
   let kittenName = event.target.name.value
   let newKitten = {}
+  let newKittenTemplate = {
+    id: generateId(),
+    name: kittenName,
+    mood: baseMood,
+    affection: baseAffection,
+    color: "brown" /* replace with the pickColor function */
+  }
 
   if(kittens.length == 0) {
-    newKitten = {
-      id: generateId(),
-      name: kittenName,
-      mood: baseMood,
-      affection: baseAffection
-    }
+    newKitten = newKittenTemplate
     kittens.push(newKitten)
   } else if(kittens.findIndex(kitten => kitten.name == kittenName) == -1) {
-      newKitten = {
-        id: generateId(),
-        name: kittenName,
-        mood: baseMood,
-        affection: baseAffection
-      }
-      kittens.push(newKitten)
-    } 
+    newKitten = newKittenTemplate
+    kittens.push(newKitten)
+  } else {
+    alert("That name is already in use")
+  }
 
   saveKittens()
   event.target.reset()
+}
+
+function pickColor() {
+  let colorPicker = Math.floor(Math.random() * 3)
+  return kittenColors[colorPicker]
 }
 
 /**
@@ -68,13 +73,17 @@ function drawKittens() {
 
   for(let kitten of kittens) {
     template += `
-      <div class="card">
-        <img TODO>
+      <div class="card kitten ${kitten.mood}">
+        <img src="kittens/${kitten.color}-${kitten.mood}.png">
         <div>${kitten.name}</div>
         <div>${kitten.mood}</div>
+        <button type="button" onclick = "pet('${kitten.id}')">Pet</button>
+        <button type="button" onclick = "catnip('${kitten.id}')">Catnip</button>
       </div>
       `
   }
+
+  document.getElementById("kittens").innerHTML = template
 }
 
 
@@ -109,11 +118,11 @@ function pet(id) {
   if(randomNum > .5) {
     if(importedKitten.affection + affectionIncrease > maxAffection) {
       importedKitten.affection = 100
-    } else{
+    } else {
       importedKitten.affection += affectionIncrease
     }
   } else {
-    importedKitten.affection -= 5
+    importedKitten.affection -= 10
   }
   setKittenMood(importedKitten)
   saveKittens()
@@ -137,24 +146,14 @@ function catnip(id) {
  * @param {Kitten} kitten 
  */
 function setKittenMood(kitten) {
-  let toggleClass = document.getElementsByClassName(JSON.stringify(kitten.id)).toggle(kitten.mood)
-  
   if(kitten.affection == 0) {
-    toggleClass
     kitten.mood = "gone"
-    toggleClass
   } else if(kitten.affection < 41) {
-    toggleClass
     kitten.mood = "angry"
-    toggleClass
   } else if(kitten.affection < 81) {
-    toggleClass
     kitten.mood = "tolerant"
-    toggleClass
   } else {
-    toggleClass
     kitten.mood = "happy"
-    toggleClass
   }
 }
 
