@@ -20,7 +20,7 @@ function addKitten(event) {
     name: kittenName,
     mood: baseMood,
     affection: baseAffection,
-    color: "brown" /* replace with the pickColor function */
+    color: pickColor(),
   }
 
   if(kittens.length == 0) {
@@ -92,8 +92,8 @@ function drawKittens() {
  * @param {string} id 
  * @return {Kitten}
  */
-function findKittenById(id) {
-  let index = kittens.findIndex(kitten => kitten.id == id)
+function findKittenById(kittenId) {
+  let index = kittens.findIndex(kitten => kitten.id == kittenId)
   if(index == -1) {
     throw new Error('Invalid Kitten ID')
   } else {

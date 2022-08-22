@@ -278,3 +278,6 @@ button.btn-special:hover{
 .hidden{
   display: none !important;
 }
+ .fa-trash{
+  margin-left: 30px;
+ }
